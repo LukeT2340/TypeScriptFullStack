@@ -11,7 +11,7 @@ router.use(bodyParser.json())
 
 // Creates token
 const createToken = (id: Schema.Types.ObjectId) => {
-    return jwt.sign({ id }, "GARGRAGGGRAR#@%@%@R@FG$@T@$#%@R$@WCV", { expiresIn: '3d' });
+    return jwt.sign({ id }, process.env.SECRET, { expiresIn: '3d' });
 }
   
 // Hashes passwords

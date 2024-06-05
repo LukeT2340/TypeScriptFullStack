@@ -1,9 +1,11 @@
 // src/index.ts
 import express, { Request, Response } from 'express'
+require('dotenv').config()
 
 const cors = require('cors')
 const mongoose = require('mongoose')
-const userRouters = require('./routers/userRoutes')
+const userRoutes = require('./routers/userRoutes')
+const taskRoutes = require('./routers/taskRoutes')
 
 // Connection URI for your MongoDB database
 const mongoURI = "mongodb://localhost:27017/mydatabase"
@@ -31,14 +33,15 @@ db.on('disconnected', () => {
 })
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors({
   origin: 'http://localhost:3001',
   credentials: true
 }))
 
-app.use('/user', userRouters)
+app.use('/user', userRoutes)
+app.use('/task', taskRoutes)
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello, TypeScript with Express!');
