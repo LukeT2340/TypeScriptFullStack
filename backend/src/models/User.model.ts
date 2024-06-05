@@ -1,6 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-interface UserDocument extends Document {
+export interface UserDocument extends Document {
+    _id:  Schema.Types.ObjectId,
     email: string;
     password: string;
     createdAt: Date;
@@ -9,12 +10,7 @@ interface UserDocument extends Document {
 const userSchema = new Schema<UserDocument>({
     email: {type: String, require: true},
     password: {type: String, require: true},
-    createdAt: {type: Date, require: true}
+    createdAt: {type: Date, default: Date.now}
 })
-
-userSchema.pre('save', function(this: UserDocument, next: () => void) {
-    this.createdAt = new Date();
-    next();
-});  
 
 export default mongoose.model<UserDocument>('User', userSchema);

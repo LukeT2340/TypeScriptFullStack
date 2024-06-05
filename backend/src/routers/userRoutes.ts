@@ -1,9 +1,8 @@
-import { hash } from 'crypto';
-import { create } from 'domain';
 import express, { Request, Response } from 'express';
 const bodyParser = require('body-parser')
-const User = require('../models/User.ts')
-const jwt = require("json-web-token")
+import User, { UserDocument } from '../models/User.model'; 
+import { Schema } from 'mongoose';
+const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 
 const router = express.Router()
@@ -11,7 +10,7 @@ const router = express.Router()
 router.use(bodyParser.json())
 
 // Creates token
-const createToken = (id: string) => {
+const createToken = (id: Schema.Types.ObjectId) => {
     return jwt.sign({ id }, "GARGRAGGGRAR#@%@%@R@FG$@T@$#%@R$@WCV", { expiresIn: '3d' });
 }
   
@@ -30,20 +29,47 @@ router.post("/login", async (req: Request, res: Response) => {
     const { email, password } = req.body
 
     try {
-        const hashedPassword = await hashPassword(password)
 
-        const user = new User({
-            email,
-            password: hashedPassword
-        })
+        const user = await User.findOne({ email })
 
-        await user.save()
+        if (!user) {
+            return res.status(400).json({ message: "Incorrect email" })
+        }
+
+        const isValidPassword = await bcrypt.compare(password, user.password)
+        
+        if (!isValidPassword) {
+            return res.status(400).json({ message: "Incorrect password" })
+        }
 
         const token = createToken(user._id)
 
         return res.status(200).json({ user_id: user._id, email: email, token: token})
     } catch (error) {
+        console.log(error)
         return res.status(400).json({message: "Unknown server error", error})
+    }
+})
+
+// Signup endpoint
+router.post("/signup", async (req: Request, res: Response) => {
+    const { email, password } = req.body
+    try {
+        const hashedPassword = await hashPassword(password)
+
+        const user = new User({
+            email,
+            password: hashedPassword            
+        })
+
+        user.save()
+
+
+        const token = createToken(user._id)
+        return res.status(200).json({ user_id: user._id, email: email, token: token})
+    } catch (error) {
+       console.log(error)
+       return res.status(400).json({message: "Unknown server error", error})
     }
 })
 
