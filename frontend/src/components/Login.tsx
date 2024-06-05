@@ -18,8 +18,8 @@ const Login: React.FC = () => {
     }
 
     return (
-        <div className="d-flex flex-column align-items-center">
-            <div className={`${styles.loginContainer} col-4 vh-100 justify-content-center`}>
+        <div className="d-flex flex-column vh-100 justify-content-center align-items-center">
+            <div className={`${styles.loginContainer} col-4 justify-content-center`}>
                 <div className={`${styles.loginBox} d-flex flex-column border rounded p-5 align-items-center`}>
                     <h2>Login</h2>
                     <form onSubmit={submitForm}>
