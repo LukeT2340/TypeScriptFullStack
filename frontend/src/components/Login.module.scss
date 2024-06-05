@@ -1,0 +1,24 @@
+.loginContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loginContainer form {
+    display: flex;
+    flex-direction: column;
+}
+
+.loginContainer span {
+    display: flex;
+    flex-direction: column;
+}
+
+.loginContainer .loginBox {
+    width: 30rem;
+}
+
+.loginContainer .additionalOptions {
+    margin-top: 4rem;
+    width: 100%;
+}
